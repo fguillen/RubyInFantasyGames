@@ -1,3 +1,3 @@
 source "https://rubygems.org"
 
-gem "fantasy", path: "/Users/fernando.guillen/Development/fantasy"
+gem "fantasy", "0.1.1"
