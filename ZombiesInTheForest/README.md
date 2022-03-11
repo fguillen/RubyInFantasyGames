@@ -1,3 +1,5 @@
+![My animated logo](cover.png)
+
 # RubyInFantasy_ZombiesGame
 
 Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
