@@ -8,8 +8,8 @@ Use cursor keys to move and space to shoot.
 
 ## How to run
 
-bundle install
-bundle exec ruby game.rb
+    bundle install
+    bundle exec ruby game.rb
 
 ## Credits
 
