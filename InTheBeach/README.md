@@ -1,10 +1,12 @@
-![My animated logo](cover.png)
+[![Watch the video](thumbnail.png)](https://youtu.be/y79o8rkywTw)
 
 # In the Beach
 
 Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
 
-You are the turtle. Use the space bar to jump over the craps an eat them
+## Instructions
+
+You are the turtle. Use the space bar to jump over the craps an eat them... be careful with mom crab!
 
 ## How to run
 

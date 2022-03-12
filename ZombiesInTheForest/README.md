@@ -1,8 +1,10 @@
 [![Watch the video](thumbnail.png)](https://youtu.be/NwK_7g3n5OY)
 
-# RubyInFantasy_ZombiesGame
+# Zombies in the Forest
 
 Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
+
+## Instructions
 
 Find your way through the forest full of zombies until your house.
 
