@@ -1,4 +1,4 @@
-![My animated logo](cover.png)
+[![Watch the video](thumbnail.png)](https://youtu.be/NwK_7g3n5OY)
 
 # RubyInFantasy_ZombiesGame
 
