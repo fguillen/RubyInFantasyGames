@@ -112,6 +112,7 @@ on_game do
     end
   end
 
+  # When space bar is pressed
   on_space_bar do
     unless turtle_hunting
       turtle_hunt_movement.run_now
