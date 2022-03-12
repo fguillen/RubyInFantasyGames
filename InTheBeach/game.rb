@@ -3,15 +3,6 @@ require "fantasy"
 SCREEN_WIDTH = 960
 SCREEN_HEIGHT = 540
 
-on_presentation do
-  puts "Presentation scene"
-  Global.background = Color.new(r: 34, g: 35, b: 35)
-  hud_points = HudText.new(position: Coordinates.new(10, 100), text: "Mom crab ate you!. <c=3ca370>Bad luck</c>.");
-  hud_points.size = "big"
-  Global.go_to_game
-  # Sound.play("lose")
-end
-
 on_game do
   background = Background.new(image_name: "beach")
   background.scale = 6
@@ -62,6 +53,7 @@ on_game do
       other.speed = 80 + rand(-30..30)
       turtle.direction = Coordinates.left
       points.text += 1
+      Sound.play("collectable")
     end
   end
 
@@ -110,6 +102,7 @@ on_game do
   mom_crab.on_collision do |other|
     if other.name == "turtle"
       turtle.destroy
+      Sound.play("lose")
       end_text =
         Clock.new do
           text = HudText.new(position: Coordinates.new(10, 100), text: "Mom crab ate you!. <c=3ca370>Bad luck</c>.");
