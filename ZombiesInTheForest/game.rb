@@ -103,12 +103,12 @@ on_end do
   Global.background = Color.new(r: 34, g: 35, b: 35)
 
   if(Global.references.player.alive)
-    hud_points = HudText.new(position: Coordinates.new(10, 100), text: "You are safe!... <c=3ca370>for now</c>.");
-    hud_points.size = "big"
+    hud_text_1 = HudText.new(position: Coordinates.new(10, 100), text: "You are safe!... <c=3ca370>for now</c>.");
+    hud_text_1.size = "big"
     Sound.play("win")
   else
-    hud_points = HudText.new(position: Coordinates.new(10, 100), text: "You died!. <c=3ca370>Bad luck</c>.");
-    hud_points.size = "big"
+    hud_text_2 = HudText.new(position: Coordinates.new(10, 100), text: "You died!. <c=3ca370>Bad luck</c>.");
+    hud_text_2.size = "big"
     Sound.play("lose")
   end
 
