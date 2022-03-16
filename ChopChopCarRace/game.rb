@@ -4,7 +4,7 @@ SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 768
 
 on_game do
-  Global.references.level ||= 3
+  Global.references.level ||= 1
   Global.references.total_levels ||= 3
 
   road_left = 232
@@ -16,25 +16,25 @@ on_game do
   Global.camera.position = Coordinates.zero
   Global.camera.speed = 500
 
-  speed_indicator = HudText.new(position: Coordinates.new(20, 20))
-  speed_indicator.size = "medium"
+  speed_display = HudText.new(position: Coordinates.new(20, 20))
+  speed_display.size = "medium"
 
-  time_indicator = HudText.new(position: Coordinates.new(SCREEN_WIDTH - 100, 20))
-  time_indicator.size = "medium"
+  time_display = HudText.new(position: Coordinates.new(SCREEN_WIDTH - 100, 20))
+  time_display.size = "medium"
 
-  position_indicator = HudText.new(position: Coordinates.new(20, 60))
-  position_indicator.visible = false
-  position_indicator.size = "medium"
+  position_display = HudText.new(position: Coordinates.new(20, 60))
+  position_display.visible = false
+  position_display.size = "medium"
 
-  level_indicator = HudText.new(position: Coordinates.new((SCREEN_WIDTH / 2 - 100), SCREEN_HEIGHT / 2))
-  level_indicator.size = "big"
-  level_indicator.text = "Level #{Global.references.level}"
+  level_display = HudText.new(position: Coordinates.new((SCREEN_WIDTH / 2 - 100), SCREEN_HEIGHT / 2))
+  level_display.size = "big"
+  level_display.text = "Level #{Global.references.level}"
   Clock.new do
     100.times do
-      level_indicator.position.y -= 10
+      level_display.position.y -= 10
       sleep(0.01)
     end
-    level_indicator.destroy
+    level_display.destroy
   end.run_on(seconds: 2)
 
   car_red = Actor.new("car_red")
@@ -147,14 +147,14 @@ on_game do
       desired_position = Coordinates.new(0, player.position.y - (SCREEN_HEIGHT - player.height - camera_delta))
       Global.camera.position = Tween.move_towards(from: Global.camera.position, to: desired_position, speed: player_max_speed)
 
-      time_indicator.text = Time.at(Global.seconds_in_scene).utc.strftime("%M:%S")
+      time_display.text = Time.at(Global.seconds_in_scene).utc.strftime("%M:%S")
     end
 
-    speed_indicator.text = "#{player.speed} km/h"
+    speed_display.text = "#{player.speed} km/h"
 
     if cars_finished > 0
-      position_indicator.visible = true
-      position_indicator.text = "#{cars_finished} cars finished"
+      position_display.visible = true
+      position_display.text = "#{cars_finished} cars finished"
     end
   end
 end

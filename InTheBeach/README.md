@@ -6,7 +6,7 @@ Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
 
 ## Instructions
 
-You are the turtle. Use the space bar to jump over the craps an eat them... be careful with mom crab!
+You are the turtle. Use the space bar to jump over the crabs an eat them... be careful with mom crab!
 
 ## How to run
 
