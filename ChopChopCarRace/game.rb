@@ -11,11 +11,13 @@ on_game do
   Global.camera.speed = 500
 
   car_red = Actor.new("car_red")
+  car_red.name = "car"
   car_red.speed = 50
   car_red.direction = Coordinates.up
   car_red.solid = true
 
   car_blue = Actor.new("car_blue")
+  car_blue.name = "car"
   car_blue.speed = 50
   car_blue.direction = Coordinates.up
   car_blue.solid = true
@@ -24,8 +26,8 @@ on_game do
   map.position = Coordinates.new(road_left, -map.height)
   map.spawn
 
-  car_red.destroy
-  car_blue.destroy
+  car_red.destroy # We don't need the originals
+  car_blue.destroy # We don't need the originals
 
   player = Actor.new("car_green")
   player.position = Coordinates.new(road_left, SCREEN_HEIGHT)
@@ -46,6 +48,17 @@ on_game do
     end
   end
 
+  player.on_collision do |other|
+    puts "player.collision: #{other.name}"
+    if other.name == "car"
+      explosion = Actor.new("explosion")
+      explosion.position = other.position
+      explosion.layer = -1
+      player.speed = 0
+      other.destroy
+    end
+  end
+
   on_cursor_left do
     player.position.x -= road_track_width
   end
@@ -58,7 +71,8 @@ on_game do
     if player.speed < player_max_speed
       player.speed += player_acceleration
     end
-    Global.camera.position.y = player.position.y - (SCREEN_HEIGHT - player.height - player.speed)
+    desired_position = Coordinates.new(0, player.position.y - (SCREEN_HEIGHT - player.height - player.speed))
+    Global.camera.position = Tween.move_towards(from: Global.camera.position, to: desired_position, speed: 200)
   end
 end
 
