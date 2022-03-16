@@ -92,8 +92,7 @@ on_game do
   end
 
   on_loop do
-    time_in_game = Time.now - Global.references.game_started_at
-    Global.references.hud_time.text = Time.at(time_in_game).utc.strftime("%M:%S")
+    Global.references.hud_time.text = Time.at(Global.seconds_in_scene).utc.strftime("%M:%S")
     Global.camera.position.y = Global.references.player.position.y - (SCREEN_HEIGHT / 2)
   end
 end
