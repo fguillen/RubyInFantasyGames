@@ -1,7 +1,7 @@
 PATH
   remote: /Users/fernando.guillen/Development/fantasy
   specs:
-    fantasy (0.1.3)
+    fantasy (0.1.5.1)
       gosu (~> 1.4.1)
       vector2d (~> 2.2.3)
 
