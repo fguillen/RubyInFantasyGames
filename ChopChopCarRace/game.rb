@@ -3,6 +3,7 @@ require "fantasy"
 SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 768
 
+# The Presentation Scene
 on_presentation do
   Global.background = Color.new(r: 166, g: 201, b: 203)
 
@@ -17,8 +18,6 @@ on_presentation do
   end.repeat(seconds: 1)
 
   car = Actor.new("car_green")
-  car.speed = 0
-  car.direction = Coordinates.up
   car.position = Coordinates.new(345, 450)
 
   car_vibrating =
@@ -30,9 +29,11 @@ on_presentation do
     end
   car_vibrating.run_now
 
+  # Start game when space pressed
   on_space_bar do
     Sound.play("start")
     car_vibrating.stop
+    car.direction = Coordinates.up
     car.speed = 400
 
     Clock.new do
@@ -41,6 +42,7 @@ on_presentation do
   end
 end
 
+# The Game Scene
 on_game do
   # The game has multiple levels see ./maps/*
   Global.references.level ||= 1
@@ -248,7 +250,7 @@ on_end do
     end.repeat(seconds: 1)
 
     on_space_bar do
-      Global.go_to_presentation
+      Global.go_to_game
     end
   else
     click_space_display = HudText.new(position: Coordinates.new(10, 500), text: "You have completed all levels");

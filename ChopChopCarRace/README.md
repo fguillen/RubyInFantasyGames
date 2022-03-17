@@ -2,11 +2,11 @@
 
 Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
 
-You are a pilot in a fast and furious car race. Avoid accidents and collect nitros to complete the race in the best position you can.
+You are a pilot in a fast and furious car race. Avoid accidents to complete the race in the best position you can.
 
 ## Instructions
 
-Use cursors left and right to drive your car.
+Use cursors left and right to drive your car. Try to not collide with other cars.
 
 ## How to run
 
@@ -16,3 +16,5 @@ Use cursors left and right to drive your car.
 ## Credits
 
 - Programming: Fernando Guillen
+- Sprites: https://www.kenney.nl
+- Sounds: https://www.oryxdesignlab.com/
