@@ -3,6 +3,44 @@ require "fantasy"
 SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 768
 
+on_presentation do
+  Global.background = Color.new(r: 166, g: 201, b: 203)
+
+  title_display = HudText.new(position: Coordinates.new(10, 200), text: "Chop-Chop Car Race");
+  title_display.size = "huge"
+
+  click_space_display = HudText.new(position: Coordinates.new(180, 640), text: "<Click Space to Start!>");
+  click_space_display.size = "medium"
+
+  Clock.new do
+    click_space_display.visible = !click_space_display.visible
+  end.repeat(seconds: 1)
+
+  car = Actor.new("car_green")
+  car.speed = 0
+  car.direction = Coordinates.up
+  car.position = Coordinates.new(345, 450)
+
+  car_vibrating =
+    Clock.new do
+      loop do
+        3.times { car.position.y += 1 }
+        3.times { car.position.y -= 1 }
+      end
+    end
+  car_vibrating.run_now
+
+  on_space_bar do
+    Sound.play("start")
+    car_vibrating.stop
+    car.speed = 400
+
+    Clock.new do
+      Global.go_to_game
+    end.run_on(seconds: 1.5)
+  end
+end
+
 on_game do
   # The game has multiple levels see ./maps/*
   Global.references.level ||= 1
@@ -202,19 +240,19 @@ on_end do
   if (Global.references.level < Global.references.total_levels)
     Global.references.level += 1
 
-    hud_start = HudText.new(position: Coordinates.new(10, 500), text: "<Click Space to play level #{Global.references.level}>");
-    hud_start.size = "medium"
+    click_space_display = HudText.new(position: Coordinates.new(10, 500), text: "<Click Space to play level #{Global.references.level}>");
+    click_space_display.size = "medium"
 
     Clock.new do
-      hud_start.visible = !hud_start.visible
+      click_space_display.visible = !click_space_display.visible
     end.repeat(seconds: 1)
 
     on_space_bar do
       Global.go_to_presentation
     end
   else
-    hud_start = HudText.new(position: Coordinates.new(10, 500), text: "You have completed all levels");
-    hud_start.size = "medium"
+    click_space_display = HudText.new(position: Coordinates.new(10, 500), text: "You have completed all levels");
+    click_space_display.size = "medium"
   end
 end
 
