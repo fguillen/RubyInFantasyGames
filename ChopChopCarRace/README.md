@@ -1,3 +1,5 @@
+[![Watch the video](thumbnail.png)](https://youtu.be/_FJW5idJ5jY)
+
 # Chop-Chop Car Race
 
 Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
