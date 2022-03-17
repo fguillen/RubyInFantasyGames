@@ -2,4 +2,4 @@ source "https://rubygems.org"
 
 ruby ">= 3.0.0"
 
-gem "fantasy", path: "/Users/fernando.guillen/Development/fantasy" # "0.1.1"
+gem "fantasy", "0.1.7"
