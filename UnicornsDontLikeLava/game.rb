@@ -22,6 +22,7 @@ on_game do
   background = Background.new(image_name: "sky")
   platform_map = PlatformsMap.new
   lava = Lava.new
+  unicors = Unicorn.new
 end
 
 class PlatformsMap < Tilemap
@@ -62,8 +63,23 @@ class Lava < Actor
     @direction = Coordinates.up
     @position = Coordinates.new(-10, SCREEN_HEIGHT - 100)
     @solid = true
+    @layer = 3
+    @speed = 10
+
+    on_collision do |other|
+      if other.name == "platform"
+        other.solid = false
+      end
+    end
+  end
+end
+
+class Unicorn < Actor
+  def initialize
+    super("unicorn")
+    @position = Coordinates.new(SCREEN_WIDTH/2, SCREEN_HEIGHT - 250)
+    @scale = 6
     @layer = 2
-    @speed = 2
   end
 end
 
