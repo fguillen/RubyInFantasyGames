@@ -1,4 +1,10 @@
-require "fantasy"
+require "fantasy" # Yeah!
+
+#
+# This game has been implemented without the use of any specific class
+# in order to show the flexibility of the fantasy API to implement
+# games with a simple and flat architecture
+#
 
 SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 768

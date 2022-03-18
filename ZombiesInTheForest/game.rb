@@ -1,4 +1,4 @@
-require "fantasy"
+require "fantasy" # Yeah!
 
 SCREEN_WIDTH = 768
 SCREEN_HEIGHT = 768
