@@ -6,7 +6,7 @@ You are an unicorn, lava is growing under your feet, but you can scape if you re
 
 ## Instructions
 
-Press space to jump and left and right cursors to control the movement to land in upper platforms until reach the rainbow in the top.
+Press space to jump and left and right cursors to control the movement to land in upper platforms until reach the rainbow in the top... before the lava reach you!
 
 ## How to run
 
@@ -16,5 +16,10 @@ Press space to jump and left and right cursors to control the movement to land i
 ## Credits
 
 - Programming: Fernando Guillen
+
+## Assets
+
 - Sprites: https://www.kenney.nl
 - Sounds: https://www.oryxdesignlab.com/
+- Unicorn: https://rcxno.itch.io/pixel-art-unicorn
+- Rainbow: [Background Vectors by Vecteezy](https://www.vecteezy.com/free-vector/background)
