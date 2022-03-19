@@ -22,7 +22,7 @@ on_game do
   background = Background.new(image_name: "sky")
   platform_map = PlatformsMap.new
   lava = Lava.new
-  unicors = Unicorn.new
+  unicorn = Unicorn.new
 end
 
 class PlatformsMap < Tilemap
@@ -49,7 +49,6 @@ class Platform < Actor
     super(image_name)
 
     @name = "platform"
-    @direction = Coordinates.zero
     @scale = 6
     @solid = true
     @layer = 1
@@ -77,9 +76,14 @@ end
 class Unicorn < Actor
   def initialize
     super("unicorn")
-    @position = Coordinates.new(SCREEN_WIDTH/2, SCREEN_HEIGHT - 250)
+    @position = Coordinates.new(SCREEN_WIDTH/2, SCREEN_HEIGHT - 550)
     @scale = 6
     @layer = 2
+    @solid = true
+    @speed = 200
+    @jump = 200
+    @gravity = 200
+    move_with_cursors(left: true, right: true, up: false, down: false, jump: true)
   end
 end
 
