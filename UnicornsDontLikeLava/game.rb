@@ -11,18 +11,28 @@ on_game do
   rainbow = Rainbow.new(position: Coordinates.new(0, platform_map.position.y - 100))
   hud = Hud.new
 
-
-
   on_loop do
-    Global.camera.position.y = lava.position.y - SCREEN_HEIGHT + 150
+    unless Global.references.game_ended
+      puts "loop"
+      Global.camera.position.y = lava.position.y - SCREEN_HEIGHT + 150
 
-    if Global.camera.position.y < rainbow.position.y
-      Global.camera.position.y = rainbow.position.y
+      if Global.camera.position.y < rainbow.position.y
+        Global.camera.position.y = rainbow.position.y
+      end
     end
   end
 
   Global.references.rainbow = rainbow
   Global.references.hud = hud
+  Global.references.game_ended = false
+end
+
+on_end do
+  Global.background = Color.new(r: 210, g: 241, b: 244)
+  puts "XXX: Global.camera.position: #{Global.camera.position}"
+  unicorn = Actor.new("unicorn")
+  unicorn.position = Coordinates.new(SCREEN_WIDTH/2 - 50, SCREEN_HEIGHT/2 - 90)
+  unicorn.scale = 6
 end
 
 class PlatformsMap < Tilemap
@@ -100,6 +110,12 @@ class Lava < Actor
 
     @collision_with = ["unicorn"]
   end
+
+  def on_collision_do(other)
+    if other.name == "unicorn"
+      other.burnt
+    end
+  end
 end
 
 class Unicorn < Actor
@@ -137,6 +153,25 @@ class Unicorn < Actor
     if @position.x > SCREEN_WIDTH - width
       @position.x = SCREEN_WIDTH - width
     end
+  end
+
+  def burnt
+    Global.references.game_ended = true
+    Sound.play("lose")
+    @image = Image.new("unicorn_burnt")
+    @solid = false
+
+    Clock.new do
+      final_position = @position + Coordinates.new(200, 0)
+
+      while(@position.y < final_position.y)
+        Tween.move_towards(from: @position, to: final_position, speed: 100)
+      end
+
+      sleep(1)
+
+      Global.go_to_end
+    end.run_now
   end
 end
 
