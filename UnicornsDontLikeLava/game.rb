@@ -9,6 +9,9 @@ on_game do
   lava = Lava.new
   unicorn = Unicorn.new
   rainbow = Rainbow.new(position: Coordinates.new(0, platform_map.position.y - 100))
+  hud = Hud.new
+
+
 
   on_loop do
     Global.camera.position.y = lava.position.y - SCREEN_HEIGHT + 150
@@ -19,6 +22,7 @@ on_game do
   end
 
   Global.references.rainbow = rainbow
+  Global.references.hud = hud
 end
 
 class PlatformsMap < Tilemap
@@ -113,6 +117,7 @@ class Unicorn < Actor
   end
 
   def on_start_jumping_do
+    Sound.play("jump")
     @image = Image.new("unicorn_jump")
   end
 
@@ -159,7 +164,23 @@ class Star < Actor
 
   def collect
     puts "Coin collected"
+    Sound.play("collectable")
+    Global.references.hud.increase_stars
     destroy
+  end
+end
+
+class Hud
+  def initialize
+    @star_display = HudImage.new(position: Coordinates.new(0, 5), image_name: "star")
+    @star_display.scale = 1
+
+    @text_display = HudText.new(position: Coordinates.new(50, 0), text: 0)
+    @text_display.size = "medium"
+  end
+
+  def increase_stars
+    @text_display.text += 1
   end
 end
 
