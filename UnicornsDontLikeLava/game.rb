@@ -26,12 +26,14 @@ class PlatformsMap < Tilemap
     platform_1 = Platform.new("platform_1")
     platform_2 = Platform.new("platform_2")
     platform_moving = PlatformMoving.new("platform_moving")
+    star = Star.new("star")
 
-    super(map_name: "platforms", tiles: [platform_1, platform_2, platform_moving], tile_width: 96, tile_height: 72)
+    super(map_name: "platforms", tiles: [platform_1, platform_2, platform_moving, star], tile_width: 96, tile_height: 72)
 
     platform_1.destroy
     platform_2.destroy
     platform_moving.destroy
+    star.destroy
 
     set_right_position
     spawn
@@ -49,7 +51,7 @@ class Platform < Actor
     @name = "platform"
     @scale = 6
     @solid = true
-    @layer = 1
+    @layer = 2
   end
 end
 
@@ -60,6 +62,7 @@ class PlatformMoving < Platform
     @speed = 100
     @direction = Coordinates.left
     @name = "platform"
+    @layer = 2
   end
 
   def on_collision_do(other)
@@ -88,7 +91,7 @@ class Lava < Actor
     @direction = Coordinates.up
     @position = Coordinates.new(-10, SCREEN_HEIGHT - 100)
     @solid = true
-    @layer = 3
+    @layer = 10
     @speed = 50
 
     @collision_with = ["unicorn"]
@@ -100,11 +103,12 @@ class Unicorn < Actor
     super("unicorn")
     @position = Coordinates.new(SCREEN_WIDTH/2, SCREEN_HEIGHT - 550)
     @scale = 6
-    @layer = 2
+    @layer = 3
     @solid = true
     @speed = 200
     @jump = 150
     @gravity = 200
+    @collision_during_jumping = true
     move_with_cursors(left: true, right: true, up: false, down: false, jump: true)
   end
 
@@ -120,6 +124,14 @@ class Unicorn < Actor
     if @position.y < Global.references.rainbow.position.y + 100
       puts "Game over"
     end
+
+    if @position.x < 0
+      @position.x = 0
+    end
+
+    if @position.x > SCREEN_WIDTH - width
+      @position.x = SCREEN_WIDTH - width
+    end
   end
 end
 
@@ -127,6 +139,27 @@ class Rainbow < Actor
   def initialize(position: )
     super("rainbow")
     @position = position
+    @layer = 1
+  end
+end
+
+class Star < Actor
+  def initialize(image_name)
+    super(image_name)
+    @solid = true
+    @scale = 2
+    @layer = 2
+  end
+
+  def on_collision_do(other)
+    if other.name == "unicorn"
+      collect
+    end
+  end
+
+  def collect
+    puts "Coin collected"
+    destroy
   end
 end
 
