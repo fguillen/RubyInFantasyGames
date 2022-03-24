@@ -1,7 +1,7 @@
 require "fantasy" # Yeah!
 
 SCREEN_WIDTH = 480
-SCREEN_HEIGHT = 1000
+SCREEN_HEIGHT = 800
 
 on_game do
   background = Background.new(image_name: "sky")
@@ -13,7 +13,6 @@ on_game do
 
   on_loop do
     unless Global.references.game_ended
-      puts "loop"
       Global.camera.position.y = lava.position.y - SCREEN_HEIGHT + 150
 
       if Global.camera.position.y < rainbow.position.y
@@ -29,10 +28,28 @@ end
 
 on_end do
   Global.background = Color.new(r: 210, g: 241, b: 244)
-  puts "XXX: Global.camera.position: #{Global.camera.position}"
   unicorn = Actor.new("unicorn")
-  unicorn.position = Coordinates.new(SCREEN_WIDTH/2 - 50, SCREEN_HEIGHT/2 - 90)
+  unicorn.position = Coordinates.new(SCREEN_WIDTH/2 - 50, 100)
   unicorn.scale = 6
+
+  text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 250))
+  text_1.text = "Unicorn is burnt"
+  text_1.size = "medium"
+  text_1.alignment = "center"
+
+  text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 350))
+  text_2.text = "GAME OVER"
+  text_2.size = "huge"
+  text_2.alignment = "center"
+
+  text_3 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 500), text: "<Click Space to try again>");
+  text_3.size = "medium"
+  text_3.alignment = "center"
+  Clock.new { text_3.visible = !text_3.visible }.repeat(seconds: 1)
+
+  on_space_bar do
+    Global.go_to_presentation
+  end
 end
 
 class PlatformsMap < Tilemap
@@ -129,6 +146,7 @@ class Unicorn < Actor
     @jump = 150
     @gravity = 200
     @collision_during_jumping = true
+    @alignment = "top-left"
     move_with_cursors(left: true, right: true, up: false, down: false, jump: true)
   end
 
