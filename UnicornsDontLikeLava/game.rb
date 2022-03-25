@@ -3,6 +3,26 @@ require "fantasy" # Yeah!
 SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 800
 
+on_presentation do
+  Global.background = Color.new(r: 210, g: 241, b: 244)
+
+  unicorn = Actor.new("unicorn")
+  unicorn.position = Coordinates.new(SCREEN_WIDTH/2 - 50, 100)
+  unicorn.scale = 6
+
+  text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 250))
+  text_1.text = "Save Unicorn from the lava"
+  text_1.alignment = "center"
+
+  text_3 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 500), text: "<Click Space to start>");
+  text_3.alignment = "center"
+  Clock.new { text_3.visible = !text_3.visible }.repeat(seconds: 1)
+
+  on_space_bar do
+    Global.go_to_game
+  end
+end
+
 on_game do
   Music.play("music")
   background = Background.new(image_name: "sky")
@@ -22,6 +42,7 @@ on_game do
     end
   end
 
+  Global.references.stars_collected = 0
   Global.references.unicorn = unicorn
   Global.references.rainbow = rainbow
   Global.references.hud = hud
@@ -35,10 +56,19 @@ on_end do
   unicorn.position = Coordinates.new(SCREEN_WIDTH/2 - 50, 100)
   unicorn.scale = 6
 
-  text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 250))
+  text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 220))
   text_1.text = End.text
-  text_1.size = "medium"
   text_1.alignment = "center"
+
+  if Global.references.end_version == "good"
+    star = HudImage.new(image_name: "star", position: Coordinates.new(SCREEN_WIDTH/2 - 50, 280))
+    star.scale = 2
+
+    text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 380))
+    text_2.text = "#{Global.references.stars_collected} stars saved"
+    text_2.size = "big"
+    text_2.alignment = "center"
+  end
 
   if Global.references.end_version == "bad"
     text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 350))
@@ -48,12 +78,11 @@ on_end do
   end
 
   text_3 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 500), text: "<Click Space to try again>");
-  text_3.size = "medium"
   text_3.alignment = "center"
   Clock.new { text_3.visible = !text_3.visible }.repeat(seconds: 1)
 
   on_space_bar do
-    Global.go_to_presentation
+    Global.go_to_game
   end
 end
 
@@ -204,9 +233,9 @@ class Star < Actor
   end
 
   def collect
-    puts "Coin collected"
     Sound.play("collectable")
     Global.references.hud.increase_stars
+    Global.references.stars_collected += 1
     destroy
   end
 end
@@ -217,7 +246,6 @@ class Hud
     @star_display.scale = 1
 
     @text_display = HudText.new(position: Coordinates.new(50, 0), text: 0)
-    @text_display.size = "medium"
   end
 
   def increase_stars

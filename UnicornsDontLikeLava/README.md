@@ -1,8 +1,10 @@
+[![Watch the video](thumbnail.png)](https://youtu.be/9XCyBVJ2bSE)
+
 # Unicorns Don't Like Lava
 
 Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
 
-You are an unicorn, lava is growing under your feet, but you can scape if you reach the sky and your home at the rainbow.
+You are an unicorn, lava is growing under your feet, but you can scape if you reach the sky and your home at the rainbow. Try to save as many stars you can on your way.
 
 ## Instructions
 
