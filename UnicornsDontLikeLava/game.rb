@@ -3,6 +3,7 @@ require "fantasy" # Yeah!
 SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 800
 
+# Presentation Scene
 on_presentation do
   Global.background = Color.new(r: 210, g: 241, b: 244)
 
@@ -23,6 +24,7 @@ on_presentation do
   end
 end
 
+# Game Scene
 on_game do
   Music.play("music")
   background = Background.new(image_name: "sky")
@@ -42,6 +44,7 @@ on_game do
     end
   end
 
+  # Some global references
   Global.references.stars_collected = 0
   Global.references.unicorn = unicorn
   Global.references.rainbow = rainbow
@@ -49,6 +52,7 @@ on_game do
   Global.references.game_ended = false
 end
 
+# End Scene
 on_end do
   Global.background = End.background_color
 
@@ -86,6 +90,7 @@ on_end do
   end
 end
 
+# The Tilemap
 class PlatformsMap < Tilemap
   def initialize
     platform_1 = Platform.new("platform_1")
@@ -95,6 +100,7 @@ class PlatformsMap < Tilemap
 
     super(map_name: "platforms", tiles: [platform_1, platform_2, platform_moving, star], tile_width: 96, tile_height: 72)
 
+    # Destroy the templates, we don't need them any more
     platform_1.destroy
     platform_2.destroy
     platform_moving.destroy
@@ -109,6 +115,7 @@ class PlatformsMap < Tilemap
   end
 end
 
+# The static platform
 class Platform < Actor
   def initialize(image_name)
     super(image_name)
@@ -120,6 +127,7 @@ class Platform < Actor
   end
 end
 
+# The moving platform
 class PlatformMoving < Platform
   def initialize(image_name)
     super(image_name)
@@ -149,6 +157,7 @@ class PlatformMoving < Platform
   end
 end
 
+# The growing lava
 class Lava < Actor
   def initialize
     super("lava")
@@ -163,12 +172,14 @@ class Lava < Actor
   end
 
   def on_collision_do(other)
+    # when lava collides with unicorn we go to the bad_end
     if other.name == "unicorn"
       End.bad_end
     end
   end
 end
 
+# The player
 class Unicorn < Actor
   def initialize
     super("unicorn")
@@ -180,15 +191,18 @@ class Unicorn < Actor
     @jump = 150
     @gravity = 200
     @collision_during_jumping = true
-    @alignment = "top-left"
+
+    # Cursors controls settings
     move_with_cursors(left: true, right: true, up: false, down: false, jump: true)
   end
 
+  # Triggered when jump starts
   def on_start_jumping_do
     Sound.play("jump")
     @image = Image.new("unicorn_jump")
   end
 
+  # Triggered when jump is in top hight
   def on_start_falling_do
     @image = Image.new("unicorn")
   end
@@ -210,6 +224,7 @@ class Unicorn < Actor
   end
 end
 
+# The rainbow at the top
 class Rainbow < Actor
   def initialize(position: )
     super("rainbow")
@@ -218,6 +233,7 @@ class Rainbow < Actor
   end
 end
 
+# The shinny star
 class Star < Actor
   def initialize(image_name)
     super(image_name)
@@ -228,18 +244,15 @@ class Star < Actor
 
   def on_collision_do(other)
     if other.name == "unicorn"
-      collect
+      Sound.play("collectable")
+      Global.references.hud.increase_stars
+      Global.references.stars_collected += 1
+      destroy
     end
-  end
-
-  def collect
-    Sound.play("collectable")
-    Global.references.hud.increase_stars
-    Global.references.stars_collected += 1
-    destroy
   end
 end
 
+# The simple HUD with the num of collected stars
 class Hud
   def initialize
     @star_display = HudImage.new(position: Coordinates.new(0, 5), image_name: "star")
@@ -253,6 +266,7 @@ class Hud
   end
 end
 
+# To control the different endings
 class End
   def self.bad_end
     Global.references.end_version = "bad"
@@ -315,4 +329,5 @@ class End
   end
 end
 
+# Start the game
 start!
