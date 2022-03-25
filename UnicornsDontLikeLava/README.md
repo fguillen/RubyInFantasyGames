@@ -19,6 +19,7 @@ Press space to jump and left and right cursors to control the movement to land i
 
 ## Assets
 
+- Music: https://www.context-sensitive.com/
 - Sprites: https://www.kenney.nl
 - Sounds: https://www.oryxdesignlab.com/
 - Unicorn: https://rcxno.itch.io/pixel-art-unicorn

@@ -4,6 +4,7 @@ SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 800
 
 on_game do
+  Music.play("music")
   background = Background.new(image_name: "sky")
   platform_map = PlatformsMap.new
   lava = Lava.new
@@ -21,26 +22,30 @@ on_game do
     end
   end
 
+  Global.references.unicorn = unicorn
   Global.references.rainbow = rainbow
   Global.references.hud = hud
   Global.references.game_ended = false
 end
 
 on_end do
-  Global.background = Color.new(r: 210, g: 241, b: 244)
-  unicorn = Actor.new("unicorn")
+  Global.background = End.background_color
+
+  unicorn = Actor.new(End.unicorn_image_name)
   unicorn.position = Coordinates.new(SCREEN_WIDTH/2 - 50, 100)
   unicorn.scale = 6
 
   text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 250))
-  text_1.text = "Unicorn is burnt"
+  text_1.text = End.text
   text_1.size = "medium"
   text_1.alignment = "center"
 
-  text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 350))
-  text_2.text = "GAME OVER"
-  text_2.size = "huge"
-  text_2.alignment = "center"
+  if Global.references.end_version == "bad"
+    text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 350))
+    text_2.text = "GAME OVER"
+    text_2.size = "huge"
+    text_2.alignment = "center"
+  end
 
   text_3 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 500), text: "<Click Space to try again>");
   text_3.size = "medium"
@@ -130,7 +135,7 @@ class Lava < Actor
 
   def on_collision_do(other)
     if other.name == "unicorn"
-      other.burnt
+      End.bad_end
     end
   end
 end
@@ -138,7 +143,7 @@ end
 class Unicorn < Actor
   def initialize
     super("unicorn")
-    @position = Coordinates.new(SCREEN_WIDTH/2, SCREEN_HEIGHT - 550)
+    @position = Coordinates.new(SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT - 550)
     @scale = 6
     @layer = 3
     @solid = true
@@ -160,36 +165,19 @@ class Unicorn < Actor
   end
 
   def on_after_move_do
-    if @position.y < Global.references.rainbow.position.y + 100
-      puts "Game over"
-    end
-
-    if @position.x < 0
-      @position.x = 0
-    end
-
-    if @position.x > SCREEN_WIDTH - width
-      @position.x = SCREEN_WIDTH - width
-    end
-  end
-
-  def burnt
-    Global.references.game_ended = true
-    Sound.play("lose")
-    @image = Image.new("unicorn_burnt")
-    @solid = false
-
-    Clock.new do
-      final_position = @position + Coordinates.new(200, 0)
-
-      while(@position.y < final_position.y)
-        Tween.move_towards(from: @position, to: final_position, speed: 100)
+    unless Global.references.game_ended
+      if @position.y < Global.references.rainbow.position.y + 100
+        End.good_end
       end
 
-      sleep(1)
+      if @position.x < 0
+        @position.x = 0
+      end
 
-      Global.go_to_end
-    end.run_now
+      if @position.x > SCREEN_WIDTH - width
+        @position.x = SCREEN_WIDTH - width
+      end
+    end
   end
 end
 
@@ -234,6 +222,68 @@ class Hud
 
   def increase_stars
     @text_display.text += 1
+  end
+end
+
+class End
+  def self.bad_end
+    Global.references.end_version = "bad"
+    Global.references.game_ended = true
+    Music.stop
+    Sound.play("lose")
+    unicorn = Global.references.unicorn
+    unicorn.image = "unicorn_burnt"
+    unicorn.solid = false
+
+    Clock.new do
+      sleep(1)
+      Global.go_to_end
+    end.run_now
+  end
+
+  def self.good_end
+    Global.references.end_version = "good"
+    Global.references.game_ended = true
+    Music.stop
+    Sound.play("win")
+    unicorn = Global.references.unicorn
+    unicorn.solid = false
+    unicorn.gravity = 0
+
+    Clock.new do
+      final_position = unicorn.position - Coordinates.new(0, 300)
+      while(unicorn.position.y > final_position.y)
+        sleep(0.01)
+        unicorn.position = Tween.move_towards(from: unicorn.position, to: final_position, speed: 100)
+      end
+
+      sleep(1)
+      Global.go_to_end
+    end.run_now
+  end
+
+  def self.background_color
+    if Global.references.end_version == "good"
+      Color.new(r: 210, g: 241, b: 244)
+    else
+      Color.new(r: 180, g: 129, b: 99)
+    end
+  end
+
+  def self.unicorn_image_name
+    if Global.references.end_version == "good"
+      "unicorn"
+    else
+      "unicorn_burnt"
+    end
+  end
+
+  def self.text
+    if Global.references.end_version == "good"
+      "Unicorn is safe"
+    else
+      "Unicorn is burnt"
+    end
   end
 end
 
