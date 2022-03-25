@@ -190,7 +190,6 @@ class Unicorn < Actor
     @speed = 200
     @jump = 150
     @gravity = 200
-    @collision_during_jumping = true
 
     # Cursors controls settings
     move_with_cursors(left: true, right: true, up: false, down: false, jump: true)
