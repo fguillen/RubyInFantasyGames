@@ -188,22 +188,24 @@ class Unicorn < Actor
     @layer = 3
     @solid = true
     @speed = 200
-    @jump = 150
-    @gravity = 200
+    @jump_force = 550
+    @gravity = 15
 
     # Cursors controls settings
     move_with_cursors(left: true, right: true, up: false, down: false, jump: true)
   end
 
   # Triggered when jump starts
-  def on_start_jumping_do
+  def on_jumping_do
     Sound.play("jump")
     @image = Image.new("unicorn_jump")
   end
 
-  # Triggered when jump is in top hight
-  def on_start_falling_do
-    @image = Image.new("unicorn")
+  # Triggered when touch the floor
+  def on_floor_do
+    unless Global.references.game_ended
+      @image = Image.new("unicorn")
+    end
   end
 
   def on_after_move_do
