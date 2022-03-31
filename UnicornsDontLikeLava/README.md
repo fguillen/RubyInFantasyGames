@@ -21,8 +21,8 @@ Press space to jump and left and right cursors to control the movement to land i
 
 ## Assets
 
-- Music: https://www.context-sensitive.com/
 - Sprites: https://www.kenney.nl
 - Sounds: https://www.oryxdesignlab.com/
 - Unicorn: https://rcxno.itch.io/pixel-art-unicorn
 - Rainbow: [Background Vectors by Vecteezy](https://www.vecteezy.com/free-vector/background)
+- Music: Evan King - Weekly Loops Season 2 - Rest. https://www.youtube.com/channel/UCT1ZkP03V18LmOj8zbyP-Dw? - https://contextsensitive.bandcamp.com/
