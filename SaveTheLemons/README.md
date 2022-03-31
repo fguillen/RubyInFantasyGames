@@ -30,3 +30,5 @@ will reward you.
 
 - Lemons: https://caz-creates-games.itch.io/cute-fruit-characters
 - Textures: https://screamingbrainstudios.itch.io/tiny-texture-pack-2
+- Other: https://kenney.nl/
+- Music: Evan King - Weekly Loops Season 2 - 02 36 - Rest. https://www.youtube.com/channel/UCT1ZkP03V18LmOj8zbyP-Dw? - https://contextsensitive.bandcamp.com/
