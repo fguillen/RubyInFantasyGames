@@ -11,11 +11,11 @@ Strongly inspired in [Lemons by C. R. Dewhurst](http://bbcmicro.co.uk//jsbeeb/pl
 Use cursor keys left and right to manage the lifeboat. You get points when a lemon bounce
 on your lifeboat. And extra points if the lemon riches the other side safely.
 
-If more than 25 lemons drown into the cold water you lose the game.
+If more than 25 lemons sink into the cold water you lose the game.
 
-But watch out!. Someone is throwing arrows into the water; if one arrives on your lifeboat
-it will burst!. There are also mystery ketchup bottles which if they reach the other side,
-will reward you.
+Have special attention to the king lemons. If they reach the other side, they will reward you.
+
+But watch out!. Some lemons are very angry; if they touch the lifeboat they will bite it!.
 
 ## How to run
 
@@ -32,3 +32,4 @@ will reward you.
 - Textures: https://screamingbrainstudios.itch.io/tiny-texture-pack-2
 - Other: https://kenney.nl/
 - Music: Evan King - Weekly Loops Season 2 - 02 36 - Rest. https://www.youtube.com/channel/UCT1ZkP03V18LmOj8zbyP-Dw? - https://contextsensitive.bandcamp.com/
+- Sounds: https://www.oryxdesignlab.com/

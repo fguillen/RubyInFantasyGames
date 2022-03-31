@@ -5,6 +5,8 @@ SCREEN_HEIGHT = 600
 
 # Game Scene
 on_game do
+  Music.play("music", volume: 0.1)
+
   background = Background.new(image_name: "background")
   background.position = Coordinates.new(-110, -30)
   background.replicable = false
@@ -14,9 +16,8 @@ on_game do
   lemon_spawner = LemonSpawner.new
   hud = HUD.new
 
-  Music.play("music", volume: 0.1)
-
   Global.references.hud = hud
+  Global.references.lifeboat = lifeboat
 end
 
 class Lifeboat < Actor
@@ -26,10 +27,15 @@ class Lifeboat < Actor
     @position = Coordinates.new(180, 500)
     @solid = true
     @speed = 200
+    @poked = false
     move_with_cursors(left: true, right: true)
   end
 
   def on_after_move_do
+    @poked ? move_poked : move_normal
+  end
+
+  def move_normal
     if(@position.x > 564)
       @position.x = 564
     end
@@ -39,30 +45,60 @@ class Lifeboat < Actor
     end
 
     if Cursor.space_bar?
-      @speed = 400
+      @speed = 500
     else
       @speed = 200
     end
+  end
+
+  def move_poked
+    @speed = 600
+
+    if(@position.x > 564)
+      @position.x = 564
+      @direction = @direction * -1
+    end
+
+    if(@position.x < 143)
+      @position.x = 143
+      @direction = @direction * -1
+    end
+  end
+
+  def poke
+    @poked = true
+    @image = Image.new("lifeboat_poked")
+    @direction = Coordinates.right
+    Clock.new { fix_poke }.run_on(seconds: 4)
+    Clock.new { Sound.play("poke") }.repeat(seconds: 1, times: 4)
+    move_with_cursors(left: false, right: false)
+  end
+
+  def fix_poke
+    @poked = false
+    @image = Image.new("lifeboat")
+    @direction = Coordinates.zero
+    @speed = 200
+    move_with_cursors(left: true, right: true)
   end
 end
 
 class LemonSpawner
   def initialize
-    @data = File.read("#{__dir__}/maps/lemons.txt")
-    puts "data: #{@data}"
+    @data = File.read("#{__dir__}/maps/lemons.txt").reverse
 
     Clock.new do
       @data.each_char do |char|
-        puts char
         if(char == "L")
           spawn(kind: "lemon")
         elsif(char == "K")
           spawn(kind: "lemon_king")
+        elsif(char == "A")
+          spawn(kind: "lemon_angry")
         end
 
         sleep(0.5)
       end
-      puts "lemons finished"
     end.run_now
   end
 
@@ -73,12 +109,10 @@ end
 
 class Lemon < Actor
   def initialize(kind: "lemon")
-    puts "XXX: new lemon: #{kind}"
     super(kind)
     @kind = kind
     @scale = 2
     @position = Coordinates.new(0, 50)
-
     @solid = true
     @jump_force = 500
     @gravity = 10
@@ -86,22 +120,21 @@ class Lemon < Actor
     @collision_with = ["lifeboat"]
     @sunk = false
 
-    # @speed = 120
-    # @direction = Coordinates.right
-
+    # Initial impulse
     impulse(direction: Coordinates.new(1, -1), force: 190)
   end
 
   def on_after_move_do
     if(!@sunk && @position.y > 540)
-      puts "lemon sunk"
       Sound.play("sunk")
       @sunk = true
-      Global.references.hud.sunk_update
+
+      if(@kind != "lemon_angry")
+        Global.references.hud.sunk_update
+      end
     end
 
     if(@position.y > 600)
-      puts "lemon destroyed"
       destroy
     end
 
@@ -112,9 +145,17 @@ class Lemon < Actor
 
   def on_collision_do(other)
     if other.name == "lifeboat" && !@jumping
-      jump
-      Global.references.hud.points_update(value: 1)
-      Sound.play("jump", volume: 0.5)
+      if(@kind == "lemon" || @kind == "lemon_king")
+        jump
+        Global.references.hud.points_update(value: 1)
+        Sound.play("jump", volume: 0.5)
+      elsif(@kind == "lemon_angry")
+        Sound.play("angry")
+        Global.references.lifeboat.poke
+        @solid = false
+      else
+        raise "Lemon kind not supported: '#{@kind}'"
+      end
     end
   end
 
