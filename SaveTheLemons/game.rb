@@ -3,6 +3,46 @@ require "fantasy" # Yeah!
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
+on_presentation do
+  text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 80), text: "Save the Lemons")
+  text_1.alignment = "center"
+  text_1.size = "huge"
+  text_1.color = Color.palette.lemon_chiffon
+
+  text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 170))
+  text_2.text = <<~EOS
+    The lemons are trying to cross the river. Help them to not fall into the cold water.
+
+    You manage the little lifeboat, be sure that as many as possible lemons finish the journey.
+
+    Use <c=3ca370>cursor keys</c> left and right to manage the lifeboat. You get points when a lemon bounce
+    on your lifeboat. And extra points if the lemon riches the other side safely.
+
+    If 20 lemons sink into the cold water <c=3ca370>you lose the game</c>.
+
+    Have special attention to the king lemons. If they reach the other side, they will reward you.
+
+    But watch out!. Some lemons are very angry; if they touch the lifeboat they will bite it!.
+
+    <c=3ca370>Press space bar</c> to move the lifeboat faster.
+  EOS
+  text_2.size = "small"
+  text_2.alignment = "center"
+
+  lifeboat = Actor.new("lifeboat")
+  lifeboat.scale = 2
+  lifeboat.position = Coordinates.new(SCREEN_WIDTH/2 - (lifeboat.width/2), 480)
+
+  text_4 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 560), text: "<Press Space to start>");
+  text_4.alignment = "center"
+  Clock.new { text_4.visible = !text_4.visible }.repeat(seconds: 1)
+
+  on_space_bar do
+    Global.go_to_game
+  end
+end
+
+
 # Game Scene
 on_game do
   Music.play("music", volume: 0.1)
@@ -28,22 +68,26 @@ on_game do
 end
 
 on_end do
-  text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 100), text: "Game Over")
+  text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 80), text: "Game Over")
   text_1.alignment = "center"
   text_1.size = "huge"
 
-  text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 200))
+  text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 170))
   text_2.text = "You made\n<c=3ca370>#{Global.references.points} points</c>"
   text_2.alignment = "center"
 
-  text_3 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 500), text: "<Click Space to try again>");
-  text_3.alignment = "center"
-  text_3.size = "small"
-  Clock.new { text_3.visible = !text_3.visible }.repeat(seconds: 1)
-
   lifeboat = Actor.new("lifeboat")
   lifeboat.scale = 2
-  lifeboat.position = Coordinates.new(SCREEN_WIDTH/2 - (lifeboat.width/2), 300)
+  lifeboat.position = Coordinates.new(SCREEN_WIDTH/2 - (lifeboat.width/2), 250)
+
+  text_3 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 350));
+  text_3.text = "Records:\n#{Disk.data.records.join("\n")}"
+  text_3.alignment = "center"
+
+  text_4 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 550), text: "<Press Space to play again>");
+  text_4.alignment = "center"
+  text_4.size = "small"
+  Clock.new { text_4.visible = !text_4.visible }.repeat(seconds: 1)
 
   on_space_bar do
     Global.go_to_game
@@ -252,6 +296,7 @@ class HUD
     if Global.references.sinks >= Global.references.max_sinks
       Music.stop
       Global.references.ended = true
+      set_records
 
       Clock.new { Sound.play("lose") }.run_on(seconds: 1)
       Clock.new { Global.go_to_end }.run_on(seconds: 2)
@@ -265,6 +310,16 @@ class HUD
 
   def level_update(value:)
     @level_counter.text = value
+  end
+
+  def set_records
+    records = Disk.data.records
+    records ||= []
+    records.push(Global.references.points)
+    records = records.sort.reverse.first(3)
+
+    Disk.data.records = records
+    Disk.save
   end
 end
 
