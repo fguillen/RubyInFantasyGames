@@ -1,3 +1,6 @@
+[![Watch the video](thumbnail.png)](https://youtu.be/kTOkfHzyEQQ)
+[Gameplay &#9654;](https://youtu.be/kTOkfHzyEQQ)
+
 # Save the Lemons
 
 Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
