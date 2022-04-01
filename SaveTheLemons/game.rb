@@ -19,7 +19,7 @@ on_presentation do
     You manage the little lifeboat, be sure that as many as possible lemons finish the journey.
 
     Use <c=#{Color.palette.lemon_chiffon.hex}>cursor keys</c> left and right to manage the lifeboat. You get points when a lemon bounce
-    on your lifeboat. And extra points if the lemon riches the other side safely.
+    on your lifeboat. And extra points if the lemon reaches the other side safely.
 
     If 20 lemons sink into the cold water <c=#{Color.palette.lemon_chiffon.hex}>you lose the game</c>.
 

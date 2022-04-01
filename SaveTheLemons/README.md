@@ -12,7 +12,7 @@ Strongly inspired in [Lemons by C. R. Dewhurst](http://bbcmicro.co.uk//jsbeeb/pl
 ## Instructions
 
 Use cursor keys left and right to manage the lifeboat. You get points when a lemon bounce
-on your lifeboat. And extra points if the lemon riches the other side safely.
+on your lifeboat. And extra points if the lemon reaches the other side safely.
 
 If 20 lemons sink into the cold water you lose the game.
 
