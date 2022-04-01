@@ -1,14 +1,10 @@
-PATH
-  remote: /Users/fernando.guillen/Development/fantasy
-  specs:
-    fantasy (0.1.11)
-      gosu (~> 1.4.1)
-      vector2d (~> 2.2.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
     contracts (0.9)
+    fantasy (0.1.13)
+      gosu (~> 1.4.1)
+      vector2d (~> 2.2.3)
     gosu (1.4.3)
     vector2d (2.2.3)
       contracts (~> 0.9.0)
@@ -17,7 +13,7 @@ PLATFORMS
   x86_64-darwin-19
 
 DEPENDENCIES
-  fantasy!
+  fantasy (= 0.1.13)
 
 RUBY VERSION
    ruby 3.0.2p107
