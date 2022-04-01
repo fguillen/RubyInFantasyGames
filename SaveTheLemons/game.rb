@@ -75,6 +75,7 @@ on_game do
   lemon_spawner.start_level(Global.references.level)
 end
 
+# Game Over Scene
 on_end do
   text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 80), text: "Game Over")
   text_1.alignment = "center"
@@ -95,13 +96,17 @@ on_end do
   text_4 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 550), text: "<Press Space to play again>");
   text_4.alignment = "center"
   text_4.size = "small"
+
+  # Make the text blinking
   Clock.new { text_4.visible = !text_4.visible }.repeat(seconds: 1)
 
+  # Re-start game when space bar pressed
   on_space_bar do
     Global.go_to_game
   end
 end
 
+# The Player
 class Lifeboat < Actor
   def initialize
     super("lifeboat")
@@ -110,9 +115,12 @@ class Lifeboat < Actor
     @solid = true
     @speed = 200
     @poked = false
+
+    # Allow this entity to be managed with cursors
     move_with_cursors(left: true, right: true)
   end
 
+  # Executed on every frame
   def on_after_move_do
     if(!Global.references.ended)
       @poked ? move_poked : move_normal
@@ -167,8 +175,10 @@ class Lifeboat < Actor
   end
 end
 
+# The Lemon Spawner
 class LemonSpawner
   def initialize
+    # The sequence of lemons is set in the file ./maps/lemons.txt
     @data = File.read("#{__dir__}/maps/lemons.txt").reverse
   end
 
@@ -176,6 +186,7 @@ class LemonSpawner
     puts "Start level: #{level}"
     Global.references.hud.level_update(value: level)
 
+    # The Thread that is in charge of spawning the proper kind of lemons
     Clock.new do
       @data.each_char do |char|
         if(char == "L")
@@ -186,7 +197,7 @@ class LemonSpawner
           spawn(kind: "angry")
         end
 
-        sleep(1 / level.to_f)
+        sleep(1 / level.to_f) # Faster on every level
       end
 
       Global.references.level += 1
@@ -202,6 +213,7 @@ class LemonSpawner
   end
 end
 
+# The Lemon entity
 class Lemon < Actor
   def initialize(kind: "normal")
     super("lemon_#{kind}")
@@ -211,14 +223,16 @@ class Lemon < Actor
     @solid = true
     @jump_force = 500
     @gravity = 10
-
-    @collision_with = ["lifeboat"]
     @sunk = false
+
+    # Only collides with "lifeboat"
+    @collision_with = ["lifeboat"]
 
     # Initial impulse
     impulse(direction: Coordinates.new(1, -1), force: 190)
   end
 
+  # On every frame
   def on_after_move_do
     if(!@sunk && !Global.references.ended && @position.y > 540)
       Sound.play("sunk", volume: 0.8)
@@ -229,14 +243,17 @@ class Lemon < Actor
       end
     end
 
-    if(@position.y > 455) # below the lifeboat
+    # Prevent collision when it is below the lifeboat
+    if(@position.y > 455)
       @solid = false
     end
 
+    # Destroy the entity when out of the screen
     if(@position.y > 600)
       destroy
     end
 
+    # If at the right of the screen the lemon is safe
     if(@position.x > SCREEN_WIDTH)
       unless Global.references.ended
         saved
@@ -244,6 +261,7 @@ class Lemon < Actor
     end
   end
 
+  # When collision detected
   def on_collision_do(other)
     return if Global.references.ended
 
@@ -262,6 +280,7 @@ class Lemon < Actor
     end
   end
 
+  # When the lemon is safe
   def saved
     if(@kind == "fairy")
       Sound.play("bonus")
@@ -276,6 +295,7 @@ class Lemon < Actor
   end
 end
 
+# The User Interface (Head Up Display)
 class HUD
   def initialize
     @sunk_title = HudText.new(position: Coordinates.new(10, 5), text: "Sunk")
@@ -331,4 +351,5 @@ class HUD
   end
 end
 
+# Start the game
 start!
