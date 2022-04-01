@@ -13,7 +13,7 @@ on your lifeboat. And extra points if the lemon riches the other side safely.
 
 If 20 lemons sink into the cold water you lose the game.
 
-Have special attention to the king lemons. If they reach the other side, they will reward you.
+Have special attention to the fairy lemons. If they reach the other side, they will reward you.
 
 But watch out!. Some lemons are very angry; if they touch the lifeboat they will bite it!.
 

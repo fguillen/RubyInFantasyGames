@@ -1,30 +1,33 @@
 require "fantasy" # Yeah!
 
+# Screen size
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
+# Presentation Scene
 on_presentation do
   text_1 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 80), text: "Save the Lemons")
   text_1.alignment = "center"
   text_1.size = "huge"
   text_1.color = Color.palette.lemon_chiffon
 
+  # Big instructions text
   text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 170))
   text_2.text = <<~EOS
     The lemons are trying to cross the river. Help them to not fall into the cold water.
 
     You manage the little lifeboat, be sure that as many as possible lemons finish the journey.
 
-    Use <c=3ca370>cursor keys</c> left and right to manage the lifeboat. You get points when a lemon bounce
+    Use <c=#{Color.palette.lemon_chiffon.hex}>cursor keys</c> left and right to manage the lifeboat. You get points when a lemon bounce
     on your lifeboat. And extra points if the lemon riches the other side safely.
 
-    If 20 lemons sink into the cold water <c=3ca370>you lose the game</c>.
+    If 20 lemons sink into the cold water <c=#{Color.palette.lemon_chiffon.hex}>you lose the game</c>.
 
-    Have special attention to the king lemons. If they reach the other side, they will reward you.
+    Have special attention to the fairy lemons. If they reach the other side, they will reward you.
 
     But watch out!. Some lemons are very angry; if they touch the lifeboat they will bite it!.
 
-    <c=3ca370>Press space bar</c> to move the lifeboat faster.
+    <c=#{Color.palette.lemon_chiffon.hex}>Press space bar</c> to move the lifeboat faster.
   EOS
   text_2.size = "small"
   text_2.alignment = "center"
@@ -37,6 +40,7 @@ on_presentation do
   text_4.alignment = "center"
   Clock.new { text_4.visible = !text_4.visible }.repeat(seconds: 1)
 
+  # Start game when space bar pressed
   on_space_bar do
     Global.go_to_game
   end
@@ -45,17 +49,20 @@ end
 
 # Game Scene
 on_game do
-  Music.play("music", volume: 0.1)
+  Music.play("music", volume: 0.05) # Start music very low
 
+  # Set the background image
   background = Background.new(image_name: "background")
   background.position = Coordinates.new(-110, -30)
   background.replicable = false
   background.scale = 3.4
 
+  # Starting the active entities
   lifeboat = Lifeboat.new
   lemon_spawner = LemonSpawner.new
   hud = HUD.new
 
+  # A bunch of global references
   Global.references.hud = hud
   Global.references.lifeboat = lifeboat
   Global.references.level = 1
@@ -64,6 +71,7 @@ on_game do
   Global.references.ended = false
   Global.references.max_sinks = 20
 
+  # Start spawning lemons
   lemon_spawner.start_level(Global.references.level)
 end
 
@@ -73,7 +81,7 @@ on_end do
   text_1.size = "huge"
 
   text_2 = HudText.new(position: Coordinates.new(SCREEN_WIDTH/2, 170))
-  text_2.text = "You made\n<c=3ca370>#{Global.references.points} points</c>"
+  text_2.text = "You made\n<c=#{Color.palette.lemon_chiffon.hex}>#{Global.references.points} points</c>"
   text_2.alignment = "center"
 
   lifeboat = Actor.new("lifeboat")
@@ -171,11 +179,11 @@ class LemonSpawner
     Clock.new do
       @data.each_char do |char|
         if(char == "L")
-          spawn(kind: "lemon")
-        elsif(char == "K")
-          spawn(kind: "lemon_king")
+          spawn(kind: "normal")
+        elsif(char == "F")
+          spawn(kind: "fairy")
         elsif(char == "A")
-          spawn(kind: "lemon_angry")
+          spawn(kind: "angry")
         end
 
         sleep(1 / level.to_f)
@@ -195,8 +203,8 @@ class LemonSpawner
 end
 
 class Lemon < Actor
-  def initialize(kind: "lemon")
-    super(kind)
+  def initialize(kind: "normal")
+    super("lemon_#{kind}")
     @kind = kind
     @scale = 2
     @position = Coordinates.new(0, 50)
@@ -216,7 +224,7 @@ class Lemon < Actor
       Sound.play("sunk", volume: 0.8)
       @sunk = true
 
-      if(@kind != "lemon_angry")
+      if(@kind != "angry")
         Global.references.hud.sunk_update
       end
     end
@@ -240,11 +248,11 @@ class Lemon < Actor
     return if Global.references.ended
 
     if other.name == "lifeboat" && !@jumping
-      if(@kind == "lemon" || @kind == "lemon_king")
+      if(@kind == "normal" || @kind == "fairy")
         jump
         Global.references.hud.points_update(value: 1)
         Sound.play("jump", volume: 0.5)
-      elsif(@kind == "lemon_angry")
+      elsif(@kind == "angry")
         Sound.play("angry")
         Global.references.lifeboat.poke
         @solid = false
@@ -255,7 +263,7 @@ class Lemon < Actor
   end
 
   def saved
-    if(@kind == "lemon_king")
+    if(@kind == "fairy")
       Sound.play("bonus")
       Global.references.hud.points_update(value: 10)
       Global.references.hud.sunk_update(value: -5)
