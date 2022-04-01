@@ -1,4 +1,5 @@
 [![Watch the video](thumbnail.png)](https://youtu.be/_FJW5idJ5jY)
+[Gameplay &#9654;](https://youtu.be/_FJW5idJ5jY)
 
 # Chop-Chop Car Race
 

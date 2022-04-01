@@ -1,4 +1,5 @@
 [![Watch the video](thumbnail.png)](https://youtu.be/NwK_7g3n5OY)
+[Gameplay &#9654;](https://youtu.be/NwK_7g3n5OY)
 
 # Zombies in the Forest
 

@@ -1,4 +1,5 @@
 [![Watch the video](thumbnail.png)](https://youtu.be/9XCyBVJ2bSE)
+[Gameplay &#9654;](https://youtu.be/9XCyBVJ2bSE)
 
 # Unicorns Don't Like Lava
 

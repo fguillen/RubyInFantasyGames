@@ -1,4 +1,5 @@
 [![Watch the video](thumbnail.png)](https://youtu.be/y79o8rkywTw)
+[Gameplay &#9654;](https://youtu.be/y79o8rkywTw)
 
 # In the Beach
 
