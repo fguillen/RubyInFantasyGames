@@ -2,7 +2,7 @@
 
 # Color Palette
 
-Simple game made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
+Simple project made with [Ruby in Fantasy](https://github.com/fguillen/fantasy).
 
 This is not a game but a demonstration of the Color palette
 

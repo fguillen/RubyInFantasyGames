@@ -36,10 +36,10 @@ on_game do
 
   on_loop do
     unless Global.references.game_ended
-      Global.camera.position.y = lava.position.y - SCREEN_HEIGHT + 150
+      Camera.main.position.y = lava.position.y - SCREEN_HEIGHT + 150
 
-      if Global.camera.position.y < rainbow.position.y
-        Global.camera.position.y = rainbow.position.y
+      if Camera.main.position.y < rainbow.position.y
+        Camera.main.position.y = rainbow.position.y
       end
     end
   end

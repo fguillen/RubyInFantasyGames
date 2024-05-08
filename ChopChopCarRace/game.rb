@@ -65,7 +65,7 @@ on_game do
   player_max_speed = 200 + (25 * Global.references.level)
 
   background = Background.new(image_name: "map") # Background image, by default it is automatically replicated
-  Global.camera.position = Coordinates.zero # We start the camera
+  Camera.main.position = Coordinates.zero # We start the camera
 
   # Different text displays
   speed_display = HudText.new(position: Coordinates.new(20, 20))
@@ -224,7 +224,7 @@ on_game do
     if !race_ended
       camera_delta = Utils.remap(value: player.speed, from_ini: 0, from_end: player_max_speed, to_ini: 0, to_end: 200)
       desired_position = Coordinates.new(0, player.position.y - (SCREEN_HEIGHT - player.height - camera_delta))
-      Global.camera.position = Tween.move_towards(from: Global.camera.position, to: desired_position, speed: player_max_speed)
+      Camera.main.position = Tween.move_towards(from: Camera.main.position, to: desired_position, speed: player_max_speed)
 
       time_display.text = Time.at(Global.seconds_in_scene).utc.strftime("%M:%S")
     end
