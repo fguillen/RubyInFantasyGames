@@ -15,7 +15,8 @@ on_game do
   background = Background.new(image_name: "background")
   background.scale = 2
 
-  chicken = Actor.new("chicken")
+  animation = Animation.new(secuence: "chicken", columns: 13, speed: 20)
+  chicken = Actor.new(animation)
   chicken.position = Coordinates.new(300, 580)
   chicken.scale = 4
   chicken.speed = 300
@@ -23,7 +24,6 @@ on_game do
   chicken.solid = true
   chicken.collision_with = ["fruit"]
   chicken.on_after_move do
-    puts ">>>> chicken.direction.x: #{chicken.direction.x}"
     if chicken.direction.x > 0
       chicken.flip("horizontal")
     elsif chicken.direction.x < 0
