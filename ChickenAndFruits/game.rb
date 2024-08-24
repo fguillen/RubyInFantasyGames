@@ -48,7 +48,6 @@ on_game do
 end
 
 def spawn_fruit
-  puts ">>>> Spawn fruit"
   animation = Animation.new(secuence: "apple_secuence", columns: 7, speed: 15, frame: rand(0..6))
   fruit = Actor.new(animation)
   fruit.name = "fruit"
