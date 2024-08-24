@@ -35,11 +35,12 @@ on_game do
     if(other.name == "fruit")
       other.destroy
       get_the_fruit
+      background.scale = 2.2
+      Clock.new { background.scale = 2 }.run_on(seconds: 0.2)
     end
   end
 
   Clock.new { spawn_fruit }.repeat(seconds: 1)
-
 
   on_loop do
     background.position.y +=  1
