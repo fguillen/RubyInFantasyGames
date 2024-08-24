@@ -15,7 +15,7 @@ on_game do
   background = Background.new(image_name: "background")
   background.scale = 2
 
-  animation = Animation.new(secuence: "chicken", columns: 13, speed: 20)
+  animation = Animation.new(secuence: "chicken_secuence", columns: 13, speed: 20)
   chicken = Actor.new(animation)
   chicken.position = Coordinates.new(300, 580)
   chicken.scale = 4
@@ -48,7 +48,8 @@ end
 
 def spawn_fruit
   puts ">>>> Spawn fruit"
-  fruit = Actor.new("apple")
+  animation = Animation.new(secuence: "apple_secuence", columns: 7, speed: 15, frame: rand(0..6))
+  fruit = Actor.new(animation)
   fruit.name = "fruit"
   fruit.position = Coordinates.new(rand(0..SCREEN_WIDTH), 0)
   fruit.scale = 4
