@@ -15,8 +15,9 @@ on_game do
   background = Background.new(image_name: "background")
   background.scale = 2
 
-  animation = Animation.new(secuence: "chicken_secuence", columns: 13, speed: 20)
-  chicken = Actor.new(animation)
+  animation_idle = Animation.new(secuence: "chicken_idle_secuence", columns: 13, speed: 20)
+  animation_moving = Animation.new(secuence: "chicken_moving_secuence", columns: 14, speed: 20)
+  chicken = Actor.new(animation_idle)
   chicken.position = Coordinates.new(300, 580)
   chicken.scale = 4
   chicken.speed = 300
@@ -25,9 +26,9 @@ on_game do
   chicken.collision_with = ["fruit"]
   chicken.on_after_move do
     if chicken.direction.x > 0
-      chicken.flip("horizontal")
+      chicken.flip = "horizontal"
     elsif chicken.direction.x < 0
-      chicken.flip("none")
+      chicken.flip = "none"
     end
   end
 
@@ -40,10 +41,24 @@ on_game do
     end
   end
 
+  chicken.on_state(:moving) do
+    chicken.sprite = animation_moving
+  end
+
+  chicken.on_state(:idle) do
+    chicken.sprite = animation_idle
+  end
+
   Clock.new { spawn_fruit }.repeat(seconds: 1)
 
   on_loop do
     background.position.y +=  1
+
+    if chicken.direction != Coordinates.zero
+      chicken.state(:moving)
+    else
+      chicken.state(:idle)
+    end
   end
 end
 
