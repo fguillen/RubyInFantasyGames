@@ -1,7 +1,8 @@
 require "fantasy" # Yeah!
+require "tween"
 
 #
-# This game has been implemented without the use of any specific class
+# This game has been implemented without the use of any custom class
 # in order to show the flexibility of the fantasy API to implement
 # games with a simple and flat architecture
 #
@@ -36,9 +37,41 @@ on_game do
     if(other.name == "fruit")
       other.destroy
       get_the_fruit
+      chicken.state(:eating)
       background.scale = 2.2
       Clock.new { background.scale = 2 }.run_on(seconds: 0.2)
     end
+  end
+
+  chicken.on_state(:eating) do
+    chicken_actual_scale = chicken.scale
+    chicken_actual_speed = chicken.speed
+
+    chicken.speed = 0
+
+    tween =
+      Tween.new(
+        chicken.scale,
+        chicken.scale + 2,
+        Tween::Elastic::Out,
+        1
+      )
+
+    Clock.new do
+      start_at = Global.seconds_in_scene
+      delta = 0
+
+      while(delta < 1) do
+        delta = Global.seconds_in_scene - start_at
+        tween.update(delta)
+        chicken.scale = tween.value
+        puts ">>>> #{chicken.scale}"
+        # sleep(0.01)
+      end
+
+      chicken.scale = chicken_actual_scale
+      chicken.speed = chicken_actual_speed
+    end.run_now
   end
 
   chicken.on_state(:moving) do

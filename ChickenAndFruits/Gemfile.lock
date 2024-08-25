@@ -9,6 +9,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     gosu (1.4.6)
+    tween (0.1.2)
     vector2d (2.2.4)
 
 PLATFORMS
@@ -17,6 +18,7 @@ PLATFORMS
 
 DEPENDENCIES
   fantasy!
+  tween (~> 0.1.2)
 
 RUBY VERSION
    ruby 3.1.1p18

@@ -4,3 +4,4 @@ ruby ">= 3.0.0"
 
 # gem "fantasy", "0.1.19"
 gem "fantasy", path: "/Users/fernando.guillen/Development/fantasy"
+gem "tween", "~> 0.1.2"
