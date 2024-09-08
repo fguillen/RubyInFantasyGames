@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/fguillen/tween.git
+  revision: 8a8858a5a9a2833e2495f9fb2726b966daab5306
+  branch: main
+  specs:
+    tween (0.1.2)
+
 PATH
   remote: /Users/fernando.guillen/Development/fantasy
   specs:
@@ -17,6 +24,7 @@ PLATFORMS
 
 DEPENDENCIES
   fantasy (= 0.1.20)!
+  tween (~> 0.1.2)!
 
 RUBY VERSION
    ruby 3.1.1p18

@@ -56,13 +56,13 @@ on_game do
       character_jumping = true
       Clock.run_now do
         character.position.y -= 100
-        character.image = "character_jump"
+        character.sprite = "character_jump"
         Sound.play("jump")
 
         sleep(1.5)
 
         character.position.y += 100
-        character.image = "character"
+        character.sprite = "character"
         character_jumping = false
       end
     end
