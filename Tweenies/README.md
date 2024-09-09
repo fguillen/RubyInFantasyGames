@@ -1,5 +1,9 @@
 # Tweenies Demo
 
+[![IMAGE ALT TEXT](https://img.youtube.com/vi/gUZ0MisthR0/0.jpg)](https://www.youtube.com/watch?v=gUZ0MisthR0 "Demo")
+
+[Video](https://www.youtube.com/watch?v=gUZ0MisthR0)
+
 Simple demo made with [Ruby in Fantasy](https://github.com/fguillen/fantasy), to demonstrate
 the Tweeni possibilities
 

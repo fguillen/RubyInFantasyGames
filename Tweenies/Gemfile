@@ -3,4 +3,5 @@ source "https://rubygems.org"
 ruby ">= 3.0.0"
 
 gem "fantasy", "0.1.20", path: "/Users/fernando.guillen/Development/fantasy"
-gem "tween", "~> 0.1.2", git: "https://github.com/fguillen/tween.git", branch: "main"
+gem "tween", "~> 0.1.2", path: "/Users/fernando.guillen/Development/tween"
+# gem "tween", "~> 0.1.2", git: "https://github.com/fguillen/tween.git", branch: "main"
