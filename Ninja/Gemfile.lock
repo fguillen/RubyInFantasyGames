@@ -1,0 +1,24 @@
+PATH
+  remote: /Users/fernandogulliensuarez/Development/fantasy
+  specs:
+    fantasy (0.1.20)
+      gosu (~> 1.4.1)
+      tween (~> 0.1.2)
+      vector2d (~> 2.2.3)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    gosu (1.4.6)
+    tween (0.1.2)
+    vector2d (2.2.4)
+
+PLATFORMS
+  arm64-darwin-24
+  ruby
+
+DEPENDENCIES
+  fantasy!
+
+BUNDLED WITH
+   2.6.3
