@@ -25,26 +25,63 @@ on_game do
   floor.position = Coordinates.new(0, Global.screen_height - floor.height)
 
   animation_walk = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
-  animation_stanby = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 1, frames: [3])
-  actor = Actor.new(animation_stanby)
+  animation_idle = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 1, frames: [3])
+  animation_punch = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 5, frames: [19], loops: 1)
+  actor = Actor.new(animation_idle)
   actor.position = Coordinates.zero
   actor.scale = 3
   actor.layer = 0
   actor.speed = 200
   actor.move_with_cursors
-  actor.on_after_move do
-    if actor.direction.x < 0
-      actor.flip = "horizontal"
-    elsif actor.direction.x > 0
-      actor.flip = "none"
+
+  actor.on_state(:idle) do
+    actor.sprite = animation_idle
+
+    actor.on_after_move do
+      actor.state(:walking) if !actor.direction.zero?
     end
 
-    if actor.direction.zero?
-      actor.sprite = animation_stanby
-    else
-      actor.sprite = animation_walk
+    on_space_bar do
+      actor.state(:punching)
     end
   end
+
+  actor.on_state(:walking) do
+    actor.sprite = animation_walk
+
+    actor.on_after_move do
+      actor.state(:idle) if actor.direction.zero?
+
+      if actor.direction.x < 0
+        actor.flip = "horizontal"
+      elsif actor.direction.x > 0
+        actor.flip = "none"
+      end
+    end
+
+    on_space_bar do
+      actor.state(:punching)
+    end
+  end
+
+  actor.on_state(:punching) do
+    # actor.pocket[:punch] = true
+    animation_punch.reset
+    actor.sprite = animation_punch
+    old_speed = actor.speed
+    actor.speed = 0
+
+    animation_punch.on_finished do
+      actor.state(:idle)
+      # actor.pocket[:punch] = false
+      actor.speed = old_speed
+    end
+
+    actor.on_after_move {}
+    on_space_bar {}
+  end
+
+  actor.state(:idle)
 
   on_loop do
     Camera.main.position.x = actor.position.x - (Global.screen_width / 2)
