@@ -24,13 +24,31 @@ on_game do
   floor.repeat = :horizontal
   floor.position = Coordinates.new(0, Global.screen_height - floor.height)
 
-  animation = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
-  actor = Actor.new(animation)
+  animation_walk = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
+  animation_stanby = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 1, frames: [3])
+  actor = Actor.new(animation_stanby)
   actor.position = Coordinates.zero
   actor.scale = 3
   actor.layer = 0
   actor.speed = 200
   actor.move_with_cursors
+  actor.on_after_move do
+    if actor.direction.x < 0
+      actor.flip = "horizontal"
+    elsif actor.direction.x > 0
+      actor.flip = "none"
+    end
+
+    if actor.direction.zero?
+      actor.sprite = animation_stanby
+    else
+      actor.sprite = animation_walk
+    end
+  end
+
+  on_loop do
+    Camera.main.position.x = actor.position.x - (Global.screen_width / 2)
+  end
 end
 
 start!
