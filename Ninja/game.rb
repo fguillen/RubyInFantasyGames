@@ -1,92 +1,105 @@
 require "fantasy"
 require "debug"
 
+ENV["debug"] = "active"
+
 SCREEN_WIDTH = 138*3*2
 SCREEN_HEIGHT = 90*3
 
 on_game do
   Global.background = Color.from_hex("312520")
 
-  background = Background.new(image_name: "background")
+  background = Background.new(graphic: "background")
   background.scale = 3
   background.layer = -1
 
-  rain = Background.new(image_name: "rain")
-  rain.scale = 2
-  rain.layer = -10
+  background_rain = Background.new(graphic: "rain")
+  background_rain.scale = 2
+  background_rain.layer = -10
   Clock.new {
-    rain.position.y += 20
-    rain.position.y = 0 if rain.position.y > rain.height
+    background_rain.position.y += 20
+    background_rain.position.y = 0 if background_rain.position.y > background_rain.height
   }.repeat(seconds: 0.1)
 
-  floor = Background.new(image_name: "floor")
-  floor.scale = 2
-  floor.layer = 10
-  floor.repeat = :horizontal
-  floor.position = Coordinates.new(0, Global.screen_height - floor.height)
+  background_floor = Background.new(graphic: "floor")
+  background_floor.scale = 2
+  background_floor.layer = 10
+  background_floor.repeat = :horizontal
+  background_floor.position = Coordinates.new(0, Global.screen_height - background_floor.height)
+
+  floor = Actor.new()
+  floor.layer = 20
+  floor
+  floor.position.y = Global.screen_height - 20
+  floor_collider = Collider.new(name: "floor", width: 200, height: 10)
+  floor_collider.solid = true
+  floor.add_part(floor_collider)
 
   animation_walk = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
   animation_idle = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 1, frames: [3])
   animation_punch = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 5, frames: [19], loops: 1)
-  actor = Actor.new(animation_idle)
-  actor.position = Coordinates.zero
-  actor.scale = 3
-  actor.layer = 0
-  actor.speed = 200
-  actor.move_with_cursors
+  ninja = Actor.new(graphic: animation_idle)
+  ninja.position = Coordinates.zero
+  ninja.scale = 3
+  ninja.layer = 0
+  ninja.speed = 200
+  ninja.move_with_cursors
 
-  actor.on_state(:idle) do
-    actor.graphic = animation_idle
 
-    actor.on_after_move do
-      actor.state(:walking) if !actor.direction.zero?
+  ninja_collider = Collider.new(name: "ninja", actor: ninja, solid: true)
+
+  ninja.on_state(:idle) do
+    ninja.graphic = animation_idle
+
+    ninja.on_after_move do
+      ninja.state(:walking) if !ninja.direction.zero?
     end
 
     on_space_bar do
-      actor.state(:punching)
+      ninja.state(:punching)
     end
   end
 
-  actor.on_state(:walking) do
-    actor.graphic = animation_walk
+  ninja.on_state(:walking) do
+    ninja.graphic = animation_walk
 
-    actor.on_after_move do
-      actor.state(:idle) if actor.direction.zero?
+    ninja.on_after_move do
+      ninja.state(:idle) if ninja.direction.zero?
 
-      if actor.direction.x < 0
-        actor.flip = "horizontal"
-      elsif actor.direction.x > 0
-        actor.flip = "none"
+      if ninja.direction.x < 0
+        ninja.flip = "horizontal"
+      elsif ninja.direction.x > 0
+        ninja.flip = "none"
       end
     end
 
     on_space_bar do
-      actor.state(:punching)
+      ninja.state(:punching)
     end
   end
 
-  actor.on_state(:punching) do
-    actor.pocket[:punch] = true
+  ninja.on_state(:punching) do
+    ninja.pocket[:punch] = true
     animation_punch.reset
-    actor.graphic = animation_punch
-    old_speed = actor.speed
-    actor.speed = 0
+    ninja.graphic = animation_punch
+    old_speed = ninja.speed
+    ninja.speed = 0
 
     animation_punch.on_finished do
-      actor.state(:idle)
-      actor.pocket[:punch] = false
-      actor.speed = old_speed
+      ninja.state(:idle)
+      ninja.pocket[:punch] = false
+      ninja.speed = old_speed
     end
 
-    actor.on_after_move {}
+    ninja.on_after_move {}
     on_space_bar {}
   end
 
-  actor.state(:idle)
+  ninja.state(:idle)
 
   on_loop do
-    Camera.main.position.x = actor.position.x - (Global.screen_width / 2)
-    puts ">>>> actor.pocket[:punch]: #{actor.pocket[:punch]}"
+    Camera.main.position.x = ninja.position.x - (Global.screen_width / 2)
+    floor.position.x = ninja.position.x - (floor_collider.width / 2)
   end
 end
 
