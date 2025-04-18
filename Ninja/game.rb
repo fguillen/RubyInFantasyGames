@@ -43,7 +43,9 @@ on_game do
   ninja.scale = 3
   ninja.layer = 0
   ninja.speed = 200
-  ninja.move_with_cursors
+  ninja.gravity = 20
+  ninja.jump_force = 500
+  ninja.move_with_cursors(jump: true)
 
 
   ninja_collider = Collider.new(name: "ninja", actor: ninja, solid: true)
@@ -55,7 +57,7 @@ on_game do
       ninja.state(:walking) if !ninja.direction.zero?
     end
 
-    on_space_bar do
+    on_key(27) do
       ninja.state(:punching)
     end
   end
@@ -73,7 +75,7 @@ on_game do
       end
     end
 
-    on_space_bar do
+    on_key(27) do
       ninja.state(:punching)
     end
   end
@@ -92,7 +94,7 @@ on_game do
     end
 
     ninja.on_after_move {}
-    on_space_bar {}
+    on_key(27) {} # deactivate punching
   end
 
   ninja.state(:idle)
