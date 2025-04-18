@@ -27,11 +27,12 @@ on_game do
   background_floor.repeat = :horizontal
   background_floor.position = Coordinates.new(0, Global.screen_height - background_floor.height)
 
-  floor = Actor.new()
+  floor = Actor.new(name: "floor")
   floor.layer = 20
-  floor.position.y = Global.screen_height - 20
+  floor.position.y = Global.screen_height - 25
   floor_collider = Collider.new(name: "floor", width: 200, height: 10)
   floor_collider.solid = true
+  floor_collider.collision_with = "none"
   floor.add_part(floor_collider)
 
   animation_walk = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
@@ -45,10 +46,17 @@ on_game do
   ninja.gravity = 20
   ninja.jump_force = 500
   ninja.auto_flipable = true
-  ninja.move_with_cursors(jump: true, up: false)
-
-
+  ninja.move_with_cursors(jump: true, up: false, down: false)
   ninja_collider = Collider.new(name: "ninja", actor: ninja, solid: true)
+
+
+  animation_enemy_walk = Animation.new(sequence: "enemy", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
+  enemy = Actor.new(graphic: animation_enemy_walk)
+  enemy.scale = 3
+  # enemy.flip = "horizontal"
+  enemy.position = Coordinates.new(Camera.main.position.x, 194)
+  enemy_collider = Collider.new(name: "enemy", actor: enemy, solid: true)
+
 
   ninja.on_state(:idle) do
     ninja.graphic = animation_idle
