@@ -1,4 +1,5 @@
 require "fantasy"
+require "debug"
 
 SCREEN_WIDTH = 138*3*2
 SCREEN_HEIGHT = 90*3
@@ -35,7 +36,7 @@ on_game do
   actor.move_with_cursors
 
   actor.on_state(:idle) do
-    actor.sprite = animation_idle
+    actor.graphic = animation_idle
 
     actor.on_after_move do
       actor.state(:walking) if !actor.direction.zero?
@@ -47,7 +48,7 @@ on_game do
   end
 
   actor.on_state(:walking) do
-    actor.sprite = animation_walk
+    actor.graphic = animation_walk
 
     actor.on_after_move do
       actor.state(:idle) if actor.direction.zero?
@@ -65,15 +66,15 @@ on_game do
   end
 
   actor.on_state(:punching) do
-    # actor.pocket[:punch] = true
+    actor.pocket[:punch] = true
     animation_punch.reset
-    actor.sprite = animation_punch
+    actor.graphic = animation_punch
     old_speed = actor.speed
     actor.speed = 0
 
     animation_punch.on_finished do
       actor.state(:idle)
-      # actor.pocket[:punch] = false
+      actor.pocket[:punch] = false
       actor.speed = old_speed
     end
 
@@ -85,6 +86,7 @@ on_game do
 
   on_loop do
     Camera.main.position.x = actor.position.x - (Global.screen_width / 2)
+    puts ">>>> actor.pocket[:punch]: #{actor.pocket[:punch]}"
   end
 end
 

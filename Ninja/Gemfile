@@ -1,3 +1,4 @@
 source "https://rubygems.org"
 
 gem "fantasy", path: "/Users/fernandogulliensuarez/Development/fantasy"
+gem "debug"
