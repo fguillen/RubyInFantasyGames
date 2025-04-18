@@ -75,12 +75,6 @@ on_game do
 
     ninja.on_after_move do
       ninja.state(:idle) if ninja.direction.zero?
-
-      if ninja.direction.x < 0
-        ninja.flip = "horizontal"
-      elsif ninja.direction.x > 0
-        ninja.flip = "none"
-      end
     end
 
     on_key(27) do
