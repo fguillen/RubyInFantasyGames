@@ -29,7 +29,6 @@ on_game do
 
   floor = Actor.new()
   floor.layer = 20
-  floor
   floor.position.y = Global.screen_height - 20
   floor_collider = Collider.new(name: "floor", width: 200, height: 10)
   floor_collider.solid = true
@@ -45,7 +44,8 @@ on_game do
   ninja.speed = 200
   ninja.gravity = 20
   ninja.jump_force = 500
-  ninja.move_with_cursors(jump: true)
+  ninja.auto_flipable = true
+  ninja.move_with_cursors(jump: true, up: false)
 
 
   ninja_collider = Collider.new(name: "ninja", actor: ninja, solid: true)
