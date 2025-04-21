@@ -17,7 +17,7 @@ on_game do
   background_rain.scale = 4
   background_rain.layer = -10
   Clock.new {
-    background_rain.position.y += 20
+    background_rain.position.y += 100
     background_rain.position.y = 0 if background_rain.position.y > background_rain.height
   }.repeat(seconds: 0.1)
 
@@ -55,13 +55,27 @@ on_game do
   punch_collider.active = false
   punch_collider.position = Coordinates.new(ninja.width, 10)
 
+  punch_collider.on_collision do |other_collider|
+    if other_collider.actor.name == "enemy" && !other_collider.actor.pocket[:punched]
+      other_collider.actor.pocket[:punched] = true
+      puts ">>>> PUNCH"
+      other_collider.actor.add_force(Coordinates.new(800 * ninja.forward.x.sign, -1500))
+    end
+  end
 
-  animation_enemy_walk = Animation.new(sequence: "enemy", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
-  enemy = Actor.new(graphic: animation_enemy_walk)
-  enemy.scale = 6
-  # enemy.flip = "horizontal"
-  enemy.position = Coordinates.new(Camera.main.position.x, 390)
-  enemy_collider = Collider.new(name: "enemy", actor: enemy, solid: true)
+
+  Clock.new {
+    animation_enemy_walk = Animation.new(sequence: "enemy", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
+    enemy = Actor.new(graphic: animation_enemy_walk)
+    enemy.scale = 6
+    enemy.position = Coordinates.new(ninja.position.x + [-Global.screen_width, Global.screen_width].sample, 390)
+    enemy.flip = "horizontal" if enemy.position.x > ninja.position.x
+    enemy.direction = Coordinates.new((ninja.position.x - enemy.position.x).sign, 0)
+    enemy.speed = 200 * 1.5
+    enemy_collider = Collider.new(name: "enemy", actor: enemy, solid: true, collision_with: "none")
+    enemy.pocket[:punched] = false
+    puts ">>>> enemy.position: #{enemy.position}"
+  }.repeat(seconds: 1)
 
 
   ninja.on_state(:idle) do
