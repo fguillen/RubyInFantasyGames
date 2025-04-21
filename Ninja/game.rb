@@ -3,18 +3,18 @@ require "debug"
 
 ENV["debug"] = "active"
 
-SCREEN_WIDTH = 138*3*2
-SCREEN_HEIGHT = 90*3
+SCREEN_WIDTH = 138*3*2*2
+SCREEN_HEIGHT = 90*3*2
 
 on_game do
   Global.background = Color.from_hex("312520")
 
   background = Background.new(graphic: "background")
-  background.scale = 3
+  background.scale = 6
   background.layer = -1
 
   background_rain = Background.new(graphic: "rain")
-  background_rain.scale = 2
+  background_rain.scale = 4
   background_rain.layer = -10
   Clock.new {
     background_rain.position.y += 20
@@ -22,14 +22,14 @@ on_game do
   }.repeat(seconds: 0.1)
 
   background_floor = Background.new(graphic: "floor")
-  background_floor.scale = 2
+  background_floor.scale = 4
   background_floor.layer = 10
   background_floor.repeat = :horizontal
   background_floor.position = Coordinates.new(0, Global.screen_height - background_floor.height)
 
   floor = Actor.new(name: "floor")
   floor.layer = 20
-  floor.position.y = Global.screen_height - 25
+  floor.position.y = Global.screen_height - 50
   floor_collider = Collider.new(name: "floor", width: 200, height: 10)
   floor_collider.solid = true
   floor_collider.collision_with = "none"
@@ -40,11 +40,11 @@ on_game do
   animation_punch = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 5, frames: [19], loops: 1)
   ninja = Actor.new(graphic: animation_idle)
   ninja.position = Coordinates.zero
-  ninja.scale = 3
+  ninja.scale = 6
   ninja.layer = 0
   ninja.speed = 200
-  ninja.gravity = 20
-  ninja.jump_force = 500
+  ninja.gravity = 40
+  ninja.jump_force = 800
   ninja.auto_flipable = true
   ninja.move_with_cursors(jump: true, up: false, down: false)
   ninja_collider = Collider.new(name: "ninja", actor: ninja, solid: true)
@@ -52,9 +52,9 @@ on_game do
 
   animation_enemy_walk = Animation.new(sequence: "enemy", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
   enemy = Actor.new(graphic: animation_enemy_walk)
-  enemy.scale = 3
+  enemy.scale = 6
   # enemy.flip = "horizontal"
-  enemy.position = Coordinates.new(Camera.main.position.x, 194)
+  enemy.position = Coordinates.new(Camera.main.position.x, 390)
   enemy_collider = Collider.new(name: "enemy", actor: enemy, solid: true)
 
 
