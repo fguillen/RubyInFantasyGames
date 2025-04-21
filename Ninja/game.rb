@@ -47,7 +47,13 @@ on_game do
   ninja.jump_force = 800
   ninja.auto_flipable = true
   ninja.move_with_cursors(jump: true, up: false, down: false)
-  ninja_collider = Collider.new(name: "ninja", actor: ninja, solid: true)
+  ninja_collider = Collider.new(name: "collider_ninja", actor: ninja, solid: true)
+  punch_collider = Collider.new(name: "collider_punch", actor: ninja, solid: true)
+  punch_collider.width = 5
+  punch_collider.height = 5
+  punch_collider.solid = false
+  punch_collider.active = false
+  punch_collider.position = Coordinates.new(ninja.width, 10)
 
 
   animation_enemy_walk = Animation.new(sequence: "enemy", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
@@ -83,6 +89,7 @@ on_game do
   end
 
   ninja.on_state(:punching) do
+    punch_collider.active = true
     ninja.pocket[:punch] = true
     animation_punch.reset
     ninja.graphic = animation_punch
@@ -92,6 +99,7 @@ on_game do
     animation_punch.on_finished do
       ninja.state(:idle)
       ninja.pocket[:punch] = false
+      punch_collider.active = false
       ninja.speed = old_speed
     end
 
