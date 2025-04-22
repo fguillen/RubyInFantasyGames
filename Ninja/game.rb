@@ -9,6 +9,8 @@ SCREEN_HEIGHT = 90*3*2
 on_game do
   Global.background = Color.from_hex("312520")
 
+  # sprite = Sprite.new("ninja")
+
   background = Background.new(graphic: "background")
   background.scale = 6
   background.layer = -1
@@ -33,7 +35,7 @@ on_game do
   floor_collider = Collider.new(name: "floor", width: 200, height: 10)
   floor_collider.solid = true
   floor_collider.collision_with = "none"
-  floor.add_part(floor_collider)
+  floor.add_child(floor_collider)
 
   animation_walk = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
   animation_idle = Animation.new(sequence: "ninja", columns: 4, rows: 7, speed: 1, frames: [3])
@@ -47,8 +49,8 @@ on_game do
   ninja.jump_force = 800
   ninja.auto_flipable = true
   ninja.move_with_cursors(jump: true, up: false, down: false)
-  ninja_collider = Collider.new(name: "collider_ninja", actor: ninja, solid: true)
-  punch_collider = Collider.new(name: "collider_punch", actor: ninja, solid: true)
+  ninja_collider = Collider.new(name: "collider_ninja", parent: ninja, solid: true)
+  punch_collider = Collider.new(name: "collider_punch", parent: ninja, solid: true)
   punch_collider.width = 5
   punch_collider.height = 5
   punch_collider.solid = false
@@ -56,10 +58,10 @@ on_game do
   punch_collider.position = Coordinates.new(ninja.width, 10)
 
   punch_collider.on_collision do |other_collider|
-    if other_collider.actor.name == "enemy" && !other_collider.actor.pocket[:punched]
-      other_collider.actor.pocket[:punched] = true
+    if other_collider.parent.name == "enemy" && !other_collider.parent.pocket[:punched]
+      other_collider.parent.pocket[:punched] = true
       puts ">>>> PUNCH"
-      other_collider.actor.add_force(Coordinates.new(800 * ninja.forward.x.sign, -1500))
+      other_collider.parent.add_force(Coordinates.new(800 * ninja.forward.x.sign, -1500))
     end
   end
 
@@ -72,7 +74,7 @@ on_game do
     enemy.flip = "horizontal" if enemy.position.x > ninja.position.x
     enemy.direction = Coordinates.new((ninja.position.x - enemy.position.x).sign, 0)
     enemy.speed = 200 * 1.5
-    enemy_collider = Collider.new(name: "enemy", actor: enemy, solid: true, collision_with: "none")
+    enemy_collider = Collider.new(name: "enemy", parent: enemy, solid: true, collision_with: "none")
     enemy.pocket[:punched] = false
     puts ">>>> enemy.position: #{enemy.position}"
   }.repeat(seconds: 1)
