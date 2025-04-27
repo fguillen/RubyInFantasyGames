@@ -8,6 +8,15 @@ SCREEN_HEIGHT = 90*3*2
 
 on_game do
   Global.background = Color.from_hex("312520")
+  @points = 0
+  hud = Hud.new
+  points_hud =
+    Text.new(
+      text: "Points: #{@points.to_s.rjust(3, '0')}",
+      position: Coordinates.new(10, 10),
+      size: "big"
+    )
+  hud.add_child(points_hud)
 
   # sprite = Sprite.new("ninja")
 
@@ -62,6 +71,8 @@ on_game do
       other_collider.parent.pocket[:punched] = true
       puts ">>>> PUNCH"
       other_collider.parent.add_force(Coordinates.new(800 * ninja.forward.x.sign, -1500))
+      @points += 1
+      points_hud.text = "Points: #{@points.to_s.rjust(3, '0')}"
     end
   end
 
