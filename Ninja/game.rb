@@ -56,6 +56,9 @@ on_game do
   ninja.jump_force = 800
   ninja.auto_flipable = true
   ninja.move_with_cursors(jump: true, up: false, down: false)
+  ninja.on_jumping do
+    Sound.play("jump")
+  end
   ninja_collider = Collider.new(name: "collider_ninja", parent: ninja, solid: true)
   punch_collider = Collider.new(name: "collider_punch", parent: ninja, solid: true)
   punch_collider.width = 5
@@ -75,6 +78,7 @@ on_game do
       enemy.gravity = 100
       @points += enemy.pocket[:points]
       points_hud.text = "Points: #{@points.to_s.rjust(3, '0')}"
+      Sound.play("impact")
     end
   end
 
@@ -114,7 +118,8 @@ on_game do
         star.position = enemy.position + Coordinates.new(0, 20)
         star.direction = Coordinates.new((ninja.position.x - enemy.position.x).sign, 0)
         star.speed = 200 * 3.5
-      end.repeat(seconds: 5)
+        Sound.play("star_shoot")
+      end.repeat(seconds: 2..5)
     end
   end.repeat(seconds: 5)
 
@@ -127,6 +132,7 @@ on_game do
 
     on_key(27) do
       ninja.state(:punching)
+      Sound.play("punch")
     end
   end
 
@@ -139,6 +145,7 @@ on_game do
 
     on_key(27) do
       ninja.state(:punching)
+      Sound.play("punch")
     end
   end
 
