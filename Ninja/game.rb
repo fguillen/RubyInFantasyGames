@@ -67,11 +67,11 @@ on_game do
   punch_collider.position = Coordinates.new(ninja.width, 10)
 
   punch_collider.on_collision do |other_collider|
-    if other_collider.parent.name == "enemy" && !other_collider.parent.pocket[:punched]
+    if other_collider.parent.name == "enemy" || other_collider.parent.name == "enemy_shoot" && !other_collider.parent.pocket[:punched]
       other_collider.parent.pocket[:punched] = true
       puts ">>>> PUNCH"
       other_collider.parent.add_force(Coordinates.new(800 * ninja.forward.x.sign, -1500))
-      @points += 1
+      @points += other_collider.parent.pocket[:points]
       points_hud.text = "Points: #{@points.to_s.rjust(3, '0')}"
     end
   end
@@ -87,9 +87,34 @@ on_game do
     enemy.speed = 200 * 1.5
     enemy_collider = Collider.new(name: "enemy", parent: enemy, solid: true, collision_with: "none")
     enemy.pocket[:punched] = false
+    enemy.pocket[:points] = 10
     puts ">>>> enemy.position: #{enemy.position}"
-  }.repeat(seconds: 1)
+  }.repeat(seconds: 5)
 
+  Clock.new {
+    animation_enemy_shoot_walk = Animation.new(sequence: "enemy_shoot", columns: 4, rows: 7, speed: 10, frames: [3, 7, 11, 15])
+    enemy_shoot = Actor.new(graphic: animation_enemy_shoot_walk)
+    enemy_shoot.scale = 6
+    enemy_shoot.position = Coordinates.new(ninja.position.x + [-Global.screen_width, Global.screen_width].sample, 390)
+    enemy_shoot.flip = "horizontal" if enemy_shoot.position.x > ninja.position.x
+    enemy_shoot.direction = Coordinates.new((ninja.position.x - enemy_shoot.position.x).sign, 0)
+    enemy_shoot.speed = 200 * 1
+    enemy_shoot_collider = Collider.new(name: "enemy", parent: enemy_shoot, solid: true, collision_with: "none")
+    enemy_shoot.pocket[:punched] = false
+    enemy_shoot.pocket[:points] = 20
+    puts ">>>> enemy_shoot.position: #{enemy_shoot.position}"
+    Clock.new {
+      star = Actor.new(graphic: "star")
+      star.scale = 4
+      star.position = enemy_shoot.position + Coordinates.new(0, 20)
+      star.direction = Coordinates.new((ninja.position.x - enemy_shoot.position.x).sign, 0)
+      star.speed = 200 * 3.5
+      Clock.new {
+        star.rotation += 10
+      }.repeat(seconds: 0.1)
+    }.repeat(seconds: 5)
+
+  }.repeat(seconds: 10)
 
   ninja.on_state(:idle) do
     ninja.graphic = animation_idle
