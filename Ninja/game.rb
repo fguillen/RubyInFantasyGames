@@ -18,8 +18,6 @@ on_game do
     )
   hud.add_child(points_hud)
 
-  # sprite = Sprite.new("ninja")
-
   background = Background.new(graphic: "background")
   background.scale = 6
   background.layer = -1
@@ -81,9 +79,9 @@ on_game do
   end
 
 
-  Clock.new {
+  Clock.new do
     enemy_properties =
-      if rand(1..10) < 9
+      if rand(1..10) < 0
         {
           name: "enemy",
           speed_factor: 1.5,
@@ -109,18 +107,16 @@ on_game do
     enemy.pocket[:points] = enemy_properties[:points]
 
     if enemy_properties[:name] == "enemy_shoot"
-      Clock.new {
-        star = Actor.new(graphic: "star")
+      Clock.new do
+        star_animation = Animation.new(sequence: "star", columns: 2, rows: 1, speed: 10, frames: [0, 1])
+        star = Actor.new(graphic: star_animation)
         star.scale = 4
         star.position = enemy.position + Coordinates.new(0, 20)
         star.direction = Coordinates.new((ninja.position.x - enemy.position.x).sign, 0)
         star.speed = 200 * 3.5
-        Clock.new {
-          star.rotation += 10
-        }.repeat(seconds: 0.1)
-      }.repeat(seconds: 5)
+      end.repeat(seconds: 5)
     end
-  }.repeat(seconds: 5)
+  end.repeat(seconds: 5)
 
   ninja.on_state(:idle) do
     ninja.graphic = animation_idle
